@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitnessKu - Super Pro</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* ===========================
+           FITNESSKU - STYLE.CSS
+        =========================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #eef2f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: .3s;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.1);
+            transition: .3s;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .tanggal {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        #hari {
+            color: #3498db;
+            font-size: 26px;
+        }
+
+        #tanggal {
+            color: #777;
+            margin-top: 5px;
+        }
+
+        /* UPGRADE: Style Streak Mingguan */
+        .streak-container {
+            display: flex;
+            justify-content: space-between;
+            background: #f7f9fc;
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .streak-day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: #777;
+            width: 40px;
+        }
+        .streak-circle {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5px;
+            color: #fff;
+            font-size: 10px;
+            transition: 0.3s;
+        }
+        .streak-day.active .streak-circle {
+            background: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+        }
+        .streak-day.completed .streak-circle {
+            background: #2ecc71 !important;
+            box-shadow: 0 0 8px rgba(46, 204, 113, 0.5);
+        }
+
+        .progress-box {
+            margin-bottom: 25px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .progress {
+            width: 100%;
+            height: 12px;
+            background: #ddd;
+            border-radius: 30px;
+            overflow: hidden;
+        }
+
+        #progressBar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #00c853, #64dd17);
+            transition: .4s;
+        }
+
+        #status {
+            margin-top: 8px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* UPGRADE: Header Jadwal & Tombol Tambah */
+        .jadwal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .jadwal-header h3 {
+            color: #2c3e50;
+            font-size: 16px;
+        }
+        .add-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .add-btn:hover { transform: scale(1.1); }
+
+        /* Card latihan */
+        .exercise {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f7f9fc;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 12px;
+            transition: .3s;
+        }
+
+        .exercise:hover {
+            transform: translateY(-2px);
+        }
+
+        .exercise label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .exercise input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .exercise h4 {
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .exercise p {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .timer-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Modals (Timer & Custom Workout) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            width: 320px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        #timerDisplay {
+            font-size: 48px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 20px 0;
+        }
+        
+        /* Form Custom Workout */
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 5px;
+            font-family: inherit;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        .modal-actions button {
+            flex: 1; border: none; padding: 10px; border-radius: 8px; cursor: pointer; color: white; font-family: inherit;
+        }
+        .btn-cancel { background: #e74c3c; }
+        .btn-confirm { background: #2ecc71; }
+
+        /* Motivasi */
+        .motivasi {
+            background: #f8fbff;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .motivasi h3 {
+            color: #3498db;
+            margin-bottom: 8px;
+        }
+
+        .motivasi p {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Tombol */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .button-group button {
+            flex: 1;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            color: #fff;
+            font-size: 15px;
+            transition: .3s;
+        }
+
+        #reset { background: #e74c3c; }
+        #darkMode { background: #2c3e50; }
+        .button-group button:hover { transform: scale(1.03); }
+
+        /* Checklist selesai */
+        .exercise.done { background: #d4edda; }
+        .exercise.done h4, .exercise.done p { text-decoration: line-through; color: #555; }
+
+        /* Dark Mode */
+        body.dark { background: #121212; }
+        body.dark .card { background: #1f1f1f; }
+        body.dark h1, body.dark h2, body.dark h3, body.dark .jadwal-header h3 { color: #fff; }
+        body.dark p, body.dark span, body.dark .form-group label { color: #ddd; }
+        body.dark .exercise, body.dark .streak-container { background: #2b2b2b; }
+        body.dark .motivasi { background: #2b2b2b; border-left: 5px solid #4dabf7; }
+        body.dark .progress { background: #555; }
+        body.dark .modal-content { background: #1f1f1f; color: white; }
+        body.dark #timerDisplay { color: white; }
+        body.dark .form-group input { background: #2b2b2b; color: white; border: 1px solid #444; }
+
+        /* Responsive */
+        @media(max-width:480px){
+            .card { padding: 20px; }
+            .button-group { flex-direction: column; }
+            h1 { font-size: 24px; }
+            #hari { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h1><i class="fa-solid fa-dumbbell"></i> FitnessKu</h1>
+        <p class="subtitle">Jadwal olahraga otomatis setiap hari</p>
+
+        <div class="tanggal">
+            <h2 id="hari">Memuat...</h2>
+            <p id="tanggal">Memuat tanggal...</p>
+        </div>
+
+        <div class="streak-container" id="streakContainer">
+            <div class="streak-day" data-day="1"><span>Sen</span><div class="streak-circle">S</div></div>
+            <div class="streak-day" data-day="2"><span>Sel</span><div class="streak-circle">S</div></div>
+            <div class="streak-day" data-day="3"><span>Rab</span><div class="streak-circle">R</div></div>
+            <div class="streak-day" data-day="4"><span>Kam</span><div class="streak-circle">K</div></div>
+            <div class="streak-day" data-day="5"><span>Jum</span><div class="streak-circle">J</div></div>
+            <div class="streak-day" data-day="6"><span>Sab</span><div class="streak-circle">S</div></div>
+            <div class="streak-day" data-day="0"><span>Min</span><div class="streak-circle">M</div></div>
+        </div>
+
+        <div class="progress-box">
+            <div class="progress-info">
+                <span>Progress Hari Ini</span>
+                <span id="persen">0%</span>
+            </div>
+            <div class="progress">
+                <div id="progressBar"></div>
+            </div>
+            <p id="status">0 / 0 latihan selesai</p>
+        </div>
+
+        <div class="jadwal-header">
+            <h3>Daftar Latihan</h3>
+            <button class="add-btn" id="openAddModal" title="Tambah Latihan Kustom"><i class="fa-solid fa-plus"></i></button>
+        </div>
+
+        <div id="jadwal">
+            </div>
+
+        <div class="motivasi">
+            <h3><i class="fa-solid fa-fire"></i> Motivasi Hari Ini</h3>
+            <p id="motivasi"></p>
+        </div>
+
+        <div class="button-group">
+            <button id="reset"><i class="fa-solid fa-rotate-right"></i> Reset Hari Ini</button>
+            <button id="darkMode"><i class="fa-solid fa-moon"></i> Dark Mode</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="timerModal">
+    <div class="modal-content">
+        <h3 id="timerTitle">Nama Latihan</h3>
+        <div id="timerDisplay">00:00</div>
+        <div class="modal-actions">
+            <button class="btn-cancel" id="closeTimer">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="addModal">
+    <div class="modal-content">
+        <h3>Tambah Latihan Custom</h3>
+        <div class="form-group" style="margin-top: 15px;">
+            <label>Nama Latihan</label>
+            <input type="text" id="customNama" placeholder="Contoh: Sit Up, Berenang">
+        </div>
+        <div class="form-group">
+            <label>Durasi / Repetisi</label>
+            <input type="text" id="customDurasi" placeholder="Contoh: 3 x 15 atau 15 Menit">
+        </div>
+        <div class="modal-actions">
+            <button class="btn-cancel" id="closeAddModal">Batal</button>
+            <button class="btn-confirm" id="saveCustomWorkout">Simpan</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================
+// FITNESSKU APP.JS (SUPER PRO)
+// ============================
+
+const jadwalBawaan = {
+  0: { hari: "Minggu", latihan: [{ nama: "Istirahat Total", durasi: "-" }] },
+  1: { hari: "Senin", latihan: [{ nama: "Push Up", durasi: "3 x 12" }, { nama: "Plank", durasi: "3 x 45 Detik" }, { nama: "Dips Kursi", durasi: "3 x 10" }] },
+  2: { hari: "Selasa", latihan: [{ nama: "Jogging", durasi: "30 Menit" }, { nama: "Jumping Jack", durasi: "3 x 1 Menit" }] },
+  3: { hari: "Rabu", latihan: [{ nama: "Squat", durasi: "4 x 15" }, { nama: "Lunges", durasi: "3 x 12" }, { nama: "Wall Sit", durasi: "3 x 45 Detik" }] },
+  4: { hari: "Kamis", latihan: [{ nama: "Yoga", durasi: "20 Menit" }, { nama: "Stretching", durasi: "15 Menit" }] },
+  5: { hari: "Jumat", latihan: [{ nama: "Pull Up", durasi: "3 x Maksimal" }, { nama: "Bicycle Crunch", durasi: "3 x 20" }, { nama: "Superman", durasi: "3 x 15" }] },
+  6: { hari: "Sabtu", latihan: [{ nama: "Bersepeda", durasi: "45 Menit" }, { nama: "Burpees", durasi: "3 x 10" }] }
+};
+
+const dataMotivasi = [
+  "Konsisten lebih penting daripada sempurna.",
+  "Latihan hari ini adalah investasi untuk tubuhmu.",
+  "Sedikit demi sedikit akan menjadi hasil besar.",
+  "Jangan menyerah hanya karena lelah.",
+  "Tubuh sehat membuat pikiran lebih kuat.",
+  "Bangga karena kamu tetap berusaha hari ini."
+];
+
+const sekarang = new Date();
+const hariNum = sekarang.getDay();
+
+// Ambil atau set Custom Workout dari LocalStorage
+let jadwalCustom = JSON.parse(localStorage.getItem("fitnessku_custom_jadwal")) || {};
+const dataHariIni = {
+    hari: jadwalBawaan[hariNum].hari,
+    latihan: [...jadwalBawaan[hariNum].latihan, ...(jadwalCustom[hariNum] || [])]
+};
+
+const formatTanggal = sekarang.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+document.getElementById("hari").innerText = dataHariIni.hari;
+document.getElementById("tanggal").innerText = formatTanggal;
+
+const randomMotivasi = dataMotivasi[Math.floor(Math.random() * dataMotivasi.length)];
+document.getElementById("motivasi").innerText = randomMotivasi;
+
+// Tandai hari aktif di sistem Streak Mingguan
+document.querySelector(`.streak-day[data-day="${hariNum}"]`).classList.add("active");
+
+const jadwalDiv = document.getElementById("jadwal");
+
+function renderJadwal() {
+    jadwalDiv.innerHTML = "";
+    dataHariIni.latihan.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "exercise";
+        
+        let timerButtonHTML = "";
+        if(item.durasi.includes("Menit") || item.durasi.includes("Detik")) {
+            timerButtonHTML = `<button class="timer-btn" onclick="startTimer('${item.nama}', '${item.durasi}')"><i class="fa-solid fa-stopwatch"></i> Mulai</button>`;
+        }
+
+        card.innerHTML = `
+        <label>
+            <input type="checkbox" class="check" data-index="${index}">
+            <div>
+                <h4>${item.nama}</h4>
+                <p>${item.durasi}</p>
+            </div>
+        </label>
+        ${timerButtonHTML}
+        `;
+        jadwalDiv.appendChild(card);
+    });
+    
+    // Re-bind event listeners untuk checkbox baru setelah di-render
+    const checks = document.querySelectorAll(".check");
+    checks.forEach((check, index) => {
+        check.addEventListener("change", function () {
+            checklist[index] = this.checked;
+            localStorage.setItem(storageKey, JSON.stringify(checklist));
+            updateProgress();
+        });
+    });
+}
+
+const tanggalKey = sekarang.toISOString().split("T")[0];
+const storageKey = "fitnessku_" + tanggalKey;
+let checklist = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+function playCelebrationSound() {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [523.25, 659.25, 783.99, 1046.50];
+    notes.forEach((freq, index) => {
+        setTimeout(() => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+        }, index * 150);
+    });
+}
+
+function updateProgress() {
+    const checks = document.querySelectorAll(".check");
+    let selesai = 0;
+    const total = checks.length;
+    let sudahSelesaiSebelumnya = (document.getElementById("persen").innerText === "100%");
+
+    checks.forEach((check, index) => {
+        if (checklist[index]) {
+            check.checked = true;
+            check.closest(".exercise").classList.add("done");
+            selesai++;
+        } else {
+            check.checked = false;
+            check.closest(".exercise").classList.remove("done");
+        }
+    });
+
+    const persen = total === 0 ? 0 : Math.round((selesai / total) * 100);
+    document.getElementById("persen").innerText = persen + "%";
+    document.getElementById("status").innerText = `${selesai} / ${total} latihan selesai`;
+    document.getElementById("progressBar").style.width = persen + "%";
+
+    // Update status penyelesaian streak hari ini di localStorage
+    let historyStreak = JSON.parse(localStorage.getItem("fitnessku_history_streak")) || {};
+    if (persen === 100 && total > 0) {
+        historyStreak[hariNum] = true;
+        if (!sudahSelesaiSebelumnya && checklist.length > 0) playCelebrationSound();
+    } else {
+        historyStreak[hariNum] = false;
+    }
+    localStorage.setItem("fitnessku_history_streak", JSON.stringify(historyStreak));
+    loadStreakUI();
+}
+
+// Memuat status warna hijau pada Kalender Streak
+function loadStreakUI() {
+    let historyStreak = JSON.parse(localStorage.getItem("fitnessku_history_streak")) || {};
+    document.querySelectorAll(".streak-day").forEach(dayEl => {
+        const dNum = dayEl.getAttribute("data-day");
+        if (historyStreak[dNum] === true) {
+            dayEl.classList.add("completed");
+            dayEl.querySelector(".streak-circle").innerHTML = '<i class="fa-solid fa-check"></i>';
+        } else {
+            dayEl.classList.remove("completed");
+            // Kembalikan huruf aslinya
+            const originalLetters = { "1":"S", "2":"S", "3":"R", "4":"K", "5":"J", "6":"S", "0":"M" };
+            dayEl.querySelector(".streak-circle").innerText = originalLetters[dNum];
+        }
+    });
+}
+
+// ===== LOGIKA TIMER =====
+let countdown;
+function startTimer(nama, durasi) {
+    clearInterval(countdown);
+    const modal = document.getElementById("timerModal");
+    const title = document.getElementById("timerTitle");
+    const display = document.getElementById("timerDisplay");
+    
+    title.innerText = nama;
+    modal.style.display = "flex";
+
+    let waktuDetik = 0;
+    if (durasi.includes("Menit")) {
+        waktuDetik = parseInt(durasi.replace(/[^0-9]/g, '')) * 60;
+    } else if (durasi.includes("Detik")) {
+        waktuDetik = parseInt(durasi.replace(/[^0-9]/g, ''));
+    }
+
+    function jalankanTimer() {
+        const menit = Math.floor(waktuDetik / 60);
+        const detik = waktuDetik % 60;
+        display.innerText = `${menit.toString().padStart(2, '0')}:${detik.toString().padStart(2, '0')}`;
+        if (waktuDetik <= 0) {
+            clearInterval(countdown);
+            display.innerText = "Selesai!";
+            playCelebrationSound();
+        }
+        waktuDetik--;
+    }
+    jalankanTimer();
+    countdown = setInterval(jalankanTimer, 1000);
+}
+document.getElementById("closeTimer").addEventListener("click", () => {
+    clearInterval(countdown);
+    document.getElementById("timerModal").style.display = "none";
+});
+
+// ===== UPGRADE: LOGIKA MODAL TAMBAH WORKOUT =====
+const addModal = document.getElementById("addModal");
+document.getElementById("openAddModal").addEventListener("click", () => addModal.style.display = "flex");
+document.getElementById("closeAddModal").addEventListener("click", () => addModal.style.display = "none");
+
+document.getElementById("saveCustomWorkout").addEventListener("click", () => {
+    const namaInput = document.getElementById("customNama").value.trim();
+    const durasiInput = document.getElementById("customDurasi").value.trim();
+
+    if(!namaInput || !durasiInput) {
+        alert("Semua kolom harus diisi!");
+        return;
+    }
+
+    if(!jadwalCustom[hariNum]) {
+        jadwalCustom[hariNum] = [];
+    }
+
+    const itemBaru = { nama: namaInput, durasi: durasiInput };
+    jadwalCustom[hariNum].push(itemBaru);
+    dataHariIni.latihan.push(itemBaru);
+
+    localStorage.setItem("fitnessku_custom_jadwal", JSON.stringify(jadwalCustom));
+    
+    // Reset form dan tutup modal
+    document.getElementById("customNama").value = "";
+    document.getElementById("customDurasi").value = "";
+    addModal.style.display = "none";
+
+    renderJadwal();
+    updateProgress();
+});
+
+// ===== DARK MODE =====
+const darkBtn = document.getElementById("darkMode");
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+    darkBtn.innerHTML = '<i class="fa-solid fa-sun"></i> Light Mode';
+}
+darkBtn.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    if (document.body.classList.contains("dark")) {
+        localStorage.setItem("theme", "dark");
+        darkBtn.innerHTML = '<i class="fa-solid fa-sun"></i> Light Mode';
+    } else {
+        localStorage.setItem("theme", "light");
+        darkBtn.innerHTML = '<i class="fa-solid fa-moon"></i> Dark Mode';
+    }
+});
+
+// ===== RESET CHECKLIST & CUSTOM WORKOUT HARI INI =====
+const resetBtn = document.getElementById("reset");
+resetBtn.addEventListener("click", () => {
+    if (!confirm("Yakin ingin mereset progress & menghapus latihan kustom hari ini?")) return;
+    
+    // Hapus checklist hari ini
+    localStorage.removeItem(storageKey);
+    checklist = [];
+
+    // Hapus kustom latihan khusus hari ini saja
+    delete jadwalCustom[hariNum];
+    localStorage.setItem("fitnessku_custom_jadwal", JSON.stringify(jadwalCustom));
+    dataHariIni.latihan = [...jadwalBawaan[hariNum].latihan];
+
+    renderJadwal();
+    updateProgress();
+});
+
+// Eksekusi Pertama
+renderJadwal();
+updateProgress();
+
+console.log("FitnessKu Super Pro Berhasil Dijalankan! 🚀");
+</script>
+</body>
+</html>
